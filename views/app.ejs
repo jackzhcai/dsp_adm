@@ -1,0 +1,75 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">媒体APP</h3>
+    <!--<a class="btn btn-primary" href="/app/appedit">Create App</a>-->
+    <div class="table-responsive">
+        <table class="table table-striped" id="J_tableAppList">
+            <thead>
+            <tr>
+                <th class="col-sm-1">&nbsp;</th>
+                <th class="col-sm-2">appid</th>
+                <th class="col-sm-4">appname</th>
+                <th>adx_name</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        window.MyObj.ListPage.init({
+            "tableId": "#J_tableAppList",
+            "delBtns": ".J_dataTablesDetele", //
+            "showMoreBtn": ".J_showMoreInfo", //查看更多按钮
+            "genMoreTempUrl": true, //动态获取数据
+            "showMoreTemp":  function(data){ //查看更多模版
+                var i = 0, len = data.length || 0, temps = [];
+                if(len > 0){
+                    temps.push('<table cellspacing="0" border="0"><tr><th class="col-sm-1">country</th><th class="col-sm-1">category</th><th class="col-sm-1">size</th><th class="col-sm-1">os</th><th class="col-sm-1">traffic</th><th class="col-sm-1">foot_price</th><th>avg_price</th></tr>');
+                    for(; i<len; i++){
+                        temps.push('<tr><td>'+ data[i].country +'</td><td>'+ data[i].category +'</td><td>'+ data[i].size +'</td><td>'+ data[i].os +'</td><td>'+data[i].traffic+'</td><td>'+data[i].foot_price+'</td><td>'+data[i].avg_bid_price+'</td></tr>');
+                    }
+                    temps.push('</table>');
+                }else{
+                    console.log("no data");
+                }
+                return temps.join("");
+            },
+            "delay": 500,
+            "dataTabOps":{
+                "paging":   true, //分页
+                "ordering": true, //排序
+                "info":     false, //信息（左下）
+                "lengthChange": false, //每页条数
+                "searching": true, //搜索
+                //"serverSide": false,
+                "ajax": {
+                    "url": "/data/getAppDataList",
+                    "cache": true
+                },
+                //"data": window.globalAppDatas,
+                "scrollX": true,
+                "columns": [
+                    {
+                        "data": "id",
+                        "orderable": false,
+                        "render": function(data, type, full, meta){
+                            return '<a role="button" href="javascript:void(0);" class="J_showMoreInfo btn btn-default btn-xs" data-showmore-text="show more" data-hidemore-text="hide more">show more</a>';
+                            /*
+                            var option = [
+                                //'<a role="button" href="/app/appedit?id='+data+'" class="btn btn-default btn-xs">Edit</a>',
+                                //'<a role="button" data-confirm-text="Delete it!" href="/data/deleteAppData?id='+data+'" class="btn btn-default btn-xs J_dataTablesDetele">Delete</a>',
+                                '<a role="button" href="javascript:void(0);" class="J_showMoreInfo btn btn-default btn-xs" data-showmore-text="show more" data-hidemore-text="hide more">show more</a>'
+                            ];
+                            return option.join('&nbsp;');
+                            */
+                        }
+                    },
+                    { "data": "appid" },
+                    { "data": "appname" },
+                    { "data": "adx_name" }
+                ],
+                "order": [[1, 'asc']]
+            }
+        });
+    });
+</script>

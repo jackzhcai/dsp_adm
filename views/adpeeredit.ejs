@@ -1,0 +1,50 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">Offer Peer Edit</h3>
+    <div id="table-responsive-upload">
+        <form enctype="multipart/form-data" method="POST" action="/data/updateAdpeerData" role="form" class="form-horizontal" id="J_adpeerForm">
+            <input type="hidden" name="id">
+            <input type="hidden" name="adx_name" value="<%if(locals.adx_name){%><%=locals.adx_name%><%}%>">
+            <input type="hidden" name="mgr_user_id" value="<%if(locals.userid){%><%=locals.userid%><%}%>">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="appid">appid</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="appid" name="appid" id="appid" class="validate[required] form-control">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="appname">appname</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="appname" name="appname" class="validate[required] form-control" id="appname">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="category">category</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="category" name="category" class="validate[required, min[1], custom[number]] form-control" id="category">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button id="J_submitBtn" class="btn btn-default btn-primary" type="submit" data-submit-target-url="" data-submit-redirect="/adpeer">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<link type="text/css" rel="stylesheet" href="/stylesheets/validationEngine.jquery.css" />
+<script type="text/javascript" src="/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("#J_adpeerForm").validationEngine();
+        //
+        window.MyObj.FormPage.init({
+            "submitBtnId": "#J_submitBtn" || null,
+            "uuid": "id",
+            "getCurDataUrl": "/data/getAdpeerData"
+        });
+    });
+</script>

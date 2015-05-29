@@ -1,0 +1,354 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">Report</h3>
+    <div class="table-responsive">
+        <!--
+        <table class="table table-striped" id="J_tablereport">
+            <thead>
+            <tr>
+                <th class="col-sm-2">App name</th>
+                <th class="col-sm-2">Requests</th>
+                <th class="col-sm-2">Bids</th>
+                <th class="col-sm-1">Bid Rate</th>
+                <th class="col-sm-2">Impressions</th>
+                <th class="col-sm-2">Win Rate</th>
+                <th class="col-sm-2">Clicks</th>
+                <th class="col-sm-2">CTR</th>
+                <th class="col-sm-1">Conv</th>
+                <th class="col-sm-1">CVR</th>
+                <th class="col-sm-1">Rev</th>
+                <th class="col-sm-1">TAC</th>
+                <th class="col-sm-1">Comm</th>
+                <th class="col-sm-1">ROI</th>
+                <th class="col-sm-1">eCPM</th>
+                <th>eCPC</th>
+            </tr>
+            </thead>
+        </table>
+        -->
+        <div id="container"></div>
+        <table class="table table-striped" id="J_tablereport_ad">
+            <thead>
+            <tr>
+                <th></th>
+                <th class="col-sm-1">partner</th>
+                <th class="col-sm-1">bizdate</th>
+                <!--<th class="col-sm-1">bidTimes</th>-->
+                <th class="col-sm-1">avgBidPrice</th>
+                <!--<th class="col-sm-1">winTimes</th>-->
+                <th class="col-sm-1">avgWinPrice</th>
+                <th class="col-sm-1">winRate</th>
+                <!--<th class="col-sm-1">impressionTimes</th>-->
+                <th class="col-sm-1">clickTimes</th>
+                <th class="col-sm-1">CTR</th>
+                <!--<th class="col-sm-1">conversionTimes</th>-->
+                <th class="col-sm-1">CVR</th>
+                <!--<th class="col-sm-1">costTotal</th>-->
+                <!--<th class="col-sm-1">incomeTotal</th>-->
+                <th class="col-sm-1">ROI</th>
+                <th class="col-sm-1">eCPM</th>
+                <th class="col-sm-1">eCPC</th>
+                <th>eCPA</th>
+            </tr>
+            </thead>
+        </table>
+    <!--
+    <table class="table table-striped" id="J_tablereport">
+        <thead>
+        <tr>
+        <th class="col-sm-2">app_id</th>
+        <th class="col-sm-2">app_name</th>
+        <th class="col-sm-2">media_type</th>
+        <th class="col-sm-1">size</th>
+        <th class="col-sm-1">os</th>
+        <th class="col-sm-1">country</th>
+        <th class="col-sm-1">connect_type</th>
+        <th class="col-sm-1">request</th>
+        <th class="col-sm-1">bidfloor_request</th>
+        <th class="col-sm-1">bidfloor_sum</th>
+        <th class="col-sm-1">reqponse</th>
+        <th class="col-sm-1">response_sum</th>
+        <th class="col-sm-1">win</th>
+        <th class="col-sm-1">win_sum</th>
+        <th class="col-sm-1">impression</th>
+        <th class="col-sm-1">click</th>
+        <th class="col-sm-1">conversion</th>
+        <th class="col-sm-1">cost</th>
+        <th class="col-sm-1">income</th>
+        <th class="col-sm-1">partner</th>
+        <th>date</th>
+        </tr>
+        </thead>
+    </table>
+    -->
+    </div>
+</div>
+<style type="text/css">
+a.showmore{ background-image: url("/images/details_open.png"); background-position: left top; background-repeat: no-repeat; text-indent: 50em; outline: none;}
+body a.hidemore{ background-image: url("/images/details_close.png"); background-position: left top; background-repeat: no-repeat; text-indent: 50em; outline: none;}
+</style>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/4.0.3/highcharts.js"></script>
+<script type="text/javascript">
+    $(function() {
+        window.MyObj.ListPage.init({
+            "tableId": "#J_tablereport_ad",
+            "showMoreBtn": ".J_showMoreInfo", //查看更多按钮
+            "genMoreTempUrl": false, //动态获取数据
+            "showMoreTemp":  function(data){ //查看更多模版
+                console.log(data);
+                var temps = [];
+                temps.push('<table cellspacing="0" border="0"><tr><th class="col-sm-1">bidTimes</th><th class="col-sm-1">winTimes</th><th class="col-sm-1">conversionTimes</th><th class="col-sm-1">incomeTotal</th><th class="col-sm-1">costTotal</th><th class="col-sm-1">impressionTimes</th></tr>');
+                temps.push('<tr><td>'+ (data.bidTimes || '') +'</td><td>'+ (data.winTimes || '') +'</td><td>'+ (data.conversionTimes || '') +'</td><td>'+ (data.incomeTotal || '') +'</td><td>'+ (data.costTotal || '') +'</td><td>'+ (data.impressionTimes || '') + '</td></tr>');
+                temps.push('</table>');
+                return temps.join("");
+            },
+            "dataTabOps":{
+                "paging":   true, //分页控件
+                "ordering": true, //排序功能
+                "info":     false, //信息显示（左下）
+                "lengthChange": false, //每页条数切换控件
+                "searching": false, //搜索框控件
+                //"lengthMenu": [ 10, 25, 50, 75, 100 ],
+                "pageLength": 50, //每页显示行数
+                //"serverSide": false,
+                "ajax": "/data/getReportDataListAd",
+                "columns": [
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "render": function(data, type, full, meta){
+                            return '<a role="button" href="javascript:void(0);" class="J_showMoreInfo showmore" data-showmore-text="show more" data-hidemore-text="hide more" style="width:20px; height:20px; overflow: hidden; display: block;">&nbsp;</a>';
+                        }
+                    },
+                    { "data": "partner" },
+                    { "data": "bizdate" },
+                    //{ "data": "bidTimes" },
+                    { "data": "avgBidPrice" },
+                    //{ "data": "winTimes" },
+                    { "data": "avgWinPrice" },
+                    { "data": "winRate" },
+                    //{ "data": "impressionTimes" },
+                    { "data": "clickTimes" },
+                    { "data": "CTR" },
+                    //{ "data": "conversionTimes" },
+                    { "data": "CVR" },
+                    //{ "data": "costTotal" },
+                    //{ "data": "incomeTotal" },
+                    { "data": "ROI" },
+                    { "data": "eCPM" },
+                    { "data": "eCPC" },
+                    { "data": "eCPA" }
+                ],
+                "order": [[1, 'asc']]
+            }
+        });
+
+        /*
+        $('#container').highcharts({
+            title: {
+                text: 'Monthly Average Temperature',
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com',
+                x: -20
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                title: {
+                    text: 'Temperature (°C)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '°C'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: 'Tokyo',
+                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+            }, {
+                name: 'New York',
+                data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+            }, {
+                name: 'Berlin',
+                data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+            }, {
+                name: 'London',
+                data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+            }]
+        });
+        */
+        //
+        /*
+        window.MyObj.ListPage.init({
+            "tableId": "#J_tablereport",
+            "dataTabOps":{
+                "paging":   true, //分页控件
+                "ordering": true, //排序功能
+                "info":     false, //信息显示（左下）
+                "lengthChange": false, //每页条数切换控件
+                "searching": false, //搜索框控件
+                //"lengthMenu": [ 10, 25, 50, 75, 100 ],
+                "pageLength": 50, //每页显示行数
+                //"serverSide": false,
+                "ajax": "/data/getReportDataList",
+                //"data": window.globalReportDatas,
+                "columns": [
+                    //{ "data": "id" }
+                    { "data": "app_id" },
+                    { "data": "app_name" },
+                    { "data": "media_type" },
+                    { "data": "size" },
+                    { "data": "os" },
+                    { "data": "country" },
+                    { "data": "connect_type" },
+                    { "data": "request" },
+                    { "data": "bidfloor_request" },
+                    { "data": "bidfloor_sum" },
+                    { "data": "response" },
+                    { "data": "response_sum" },
+                    { "data": "win" },
+                    { "data": "win_sum" },
+                    { "data": "impression" },
+                    { "data": "click" },
+                    { "data": "conversion" },
+                    { "data": "cost" },
+                    { "data": "income" },
+                    { "data": "partner" },
+                    {
+                        "data": "date",
+                        "render": function(data, type, full, meta){
+                            return data;
+                        }
+                    }
+                ],
+                "order": [[0, 'asc']]
+            }
+        });
+        */
+        /*
+        //
+        window.MyObj.ListPage.init({
+            "tableId": "#J_tablereport",
+            "delBtns": ".J_dataTablesDetele", //
+            "dataTabOps":{
+                "paging":   true, //分页控件
+                "ordering": true, //排序功能
+                "info":     false, //信息显示（左下）
+                "lengthChange": false, //每页条数切换控件
+                "searching": false, //搜索框控件
+                //"lengthMenu": [ 10, 25, 50, 75, 100 ],
+                "pageLength": 10, //每页显示行数
+                //"serverSide": false,
+                "ajax": "/data/getReportDataList",
+                //"data": window.globalReportDatas,
+                "columns": [
+                    { "data": "appname" },
+                    {
+                        "data": "requests" ,
+                        "render": function(data, type, full, meta){
+                            return parseInt(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "bids",
+                        "render": function(data, type, full, meta){
+                            return parseInt(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "bidrate",
+                        "render": function(data, type, full, meta){
+                            return data + "%";
+                        }
+                    },
+                    {
+                        "data": "impressions",
+                        "render": function(data, type, full, meta){
+                            return parseInt(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "winrate"  ,
+                        "render": function(data, type, full, meta){
+                            return data + "%";
+                        }
+                    },
+                    {
+                        "data": "clicks" ,
+                        "render": function(data, type, full, meta){
+                            return parseInt(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "ctr"  ,
+                        "render": function(data, type, full, meta){
+                            return data + "%";
+                        }
+                    },
+                    {
+                        "data": "conv"  ,
+                        "render": function(data, type, full, meta){
+                            return parseInt(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "cvr" ,
+                        "render": function(data, type, full, meta){
+                            return data + "%";
+                        }
+                    },
+                    {
+                        "data": "rev"  ,
+                        "render": function(data, type, full, meta){
+                            return "$"+ parseFloat(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "tac"  ,
+                        "render": function(data, type, full, meta){
+                            return "$"+parseFloat(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "comm" ,
+                        "render": function(data, type, full, meta){
+                            return "$"+parseFloat(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "roi" ,
+                        "render": function(data, type, full, meta){
+                            return data + "%";
+                        }
+                    },
+                    {
+                        "data": "ecpm" ,
+                        "render": function(data, type, full, meta){
+                            return "$"+parseFloat(data).toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "ecpc",
+                        "render": function(data, type, full, meta){
+                            return "$"+parseFloat(data).toLocaleString();
+                        }
+                    }
+                ],
+                "order": [[0, 'asc']]
+            }
+        });
+         */
+    });
+</script>

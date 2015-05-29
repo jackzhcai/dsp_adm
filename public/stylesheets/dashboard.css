@@ -1,0 +1,297 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+	padding-top: 50px;
+}
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+#header {
+	padding: 0px;
+	margin: 0px;
+	height: 50px;
+}
+#logo {
+	text-indent: -120px;
+	overflow: hidden;
+	margin-left: 0px;
+}
+#mainMenu {
+	/*box-shadow: 0 0 10px #999;*/
+	float: none;
+	background-color: #61b0e9;
+	/*background: url("http://wbpreview.com/previews/WB042R743/media/img/bg-sidebar.png") no-repeat scroll 0 390px #61b0e9;*/
+}
+.sidebar {
+	display: none;
+	position: fixed;
+	top: 50px;
+	left: 0;
+	bottom: 0;
+	z-index: 100;
+	display: block;
+	padding: 10px 0px 0px;
+	background-color: #f5f5f5;
+}
+@media (min-width: 768px) {
+.sidebar {
+	display: block;
+}
+}
+/* Sidebar navigation */
+.sidebar-menu li a, .sidebar-menu li div a {
+	position: relative;
+	display: block;
+}
+.sidebar-menu li.active div a, .sidebar-menu li.active div a:hover {
+	color: #20202f;
+	background-color: #ffffff;
+}
+.sidebar-menu li div a {
+	display: block;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 10px;
+	color: #ffffff;
+	height: 50px;
+	line-height: 30px;
+}
+
+.sidebar-menu li div a span {
+	position:relative;
+	top: -2px;
+}
+.sidebar-menu li.secLev div a span {
+	position:relative;
+	top: 0px;
+}
+
+.sidebar-menu, .sidebar-menu ul, .sidebar-menu li {
+	position: relative;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.sidebar-menu li  a {
+	word-break: keep-all;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.sidebar-menu a:hover {
+	text-decoration: none;
+}
+.sidebar-menu li div a:hover {
+	background: #6bbef6;
+}
+.sidebar-menu li div a i {
+	position: relative;
+	top: 2px;
+	font-size: 17px;
+	font-weight: normal;
+	line-height: 26px;
+	text-align: center;
+	width: 35px;
+}
+.sidebar-menu li.secLev div a {
+	text-indent: 3em;
+}
+.sidebar-menu li div ul li a {
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-top: 1px solid #ddd;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+	color: #777;
+	display: block;
+	padding: 10px 0 10px 30px;
+	text-decoration: none;
+	background-color: #FFF;
+}
+.sidebar-menu li.first div a span:after {
+	border-color: #ffffff #61b0e9 #61b0e9;
+	border-style: solid;
+	border-width: 5px;
+	content: "";
+	display: inline-block;
+	height: 0;
+	position: relative;
+	top: 4px;
+	width: 0;
+	margin-left: 10px;
+}
+.sidebar-menu li.first div a:hover span:after {
+	border-color: #ffffff #6bbef6 #6bbef6;
+	border-style: solid;
+	border-width: 5px;
+	content: "";
+	display: inline-block;
+	height: 0;
+	position: relative;
+	top: 4px;
+	width: 0;
+	margin-left: 10px;
+}
+.sidebar-resizer{
+	position: fixed;
+	bottom: 0px;
+	text-align: center;
+	padding:0px;
+	z-index: 101;
+}
+.resizer-icon{
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 36px;
+	height: 36px;
+	font-size: 36px;
+	cursor: pointer;
+}
+.resizer-icon:hover{ 
+	color: #FFF;
+}
+/*
+ * Main content
+ */
+.main {
+	padding: 20px;
+}
+@media (min-width: 768px) {
+	.main {
+		padding-left: 20px;
+		pading-right: 20px;
+	}
+}
+.main .page-header {
+	margin-top: 0;
+}
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+	margin-bottom: 20px;
+	text-align: center;
+}
+.placeholders h4 {
+	margin-bottom: 0;
+}
+.placeholder {
+	margin-bottom: 20px;
+}
+.placeholder img {
+	border-radius: 50%;
+}
+/*
+ * costom 
+ */
+.modal {
+	z-index: 5000 !important;
+}
+select.ui-datepicker-month {
+	color: #555 !important;
+}
+div.form-control-required {
+	position: absolute;
+	z-index: 1;
+	right: 0px;
+	top: 0px;
+	width: 10px;
+	color: red;
+	padding-top: 10px;
+	text-align: center;
+}
+.clearboth {
+	clear: both !important;
+}
+.loading {
+	background-color: #FFF;
+}
+.indentbox {
+	padding-top: 5px;
+	padding-left: 15px;
+}
+.country-box {
+	margin: 0px;
+	display: inline-block;
+	padding: 5px 10px 5px 5px;
+}
+.country-box label {
+	word-wrap: break-word;
+	width: 150px;
+	word-break: normal;
+}
+input.country-btn {
+	text-align: left;
+}
+a.navbar-brand {
+	background-image: url(../images/logo.png);
+	background-repeat: no-repeat;
+	background-position: left 10px;
+	background-size: auto 30px;
+	width: 175px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='*.png');
+}
+.pagination a.ellipsis, .pagination a.ellipsis {
+	color: #000;
+	cursor: default;
+	outline: none;
+}
+.pagination a.ellipsis:focus, .pagination a.ellipsis:hover {
+	background-color: inherit;
+	color: inherit;
+	border-color: #ddd;
+}
+.bs-example-tabs {
+	padding-bottom: 15px;
+}
+.bs-example-tabs .nav-tabs li.first {
+	margin-left: 15px;
+}
+.bs-example-tabs .nav-tabs a {
+	outline: none;
+}
+.creative-row-pannel {
+	position: relative;
+}
+.img-thumbnail {
+	position: absolute;
+	top: 0px;
+	right: 50px;
+	z-index: 1;
+	width: 200px;
+}
+.icon-thumbnail {
+	position: absolute;
+	top: 0px;
+	right: -50px;
+	z-index: 1;
+	width: 40px;
+	height: 40px;
+}
+ul.J_stateEdit li a:hover {
+	background-color: inherit;
+	cursor: default;
+	color: #428bca;
+	border: 1px solid transparent;
+}
+/**
+ * 
+ */
+.navbar-inverse {
+	background-color: #3a4450;
+}
+

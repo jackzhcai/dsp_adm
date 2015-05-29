@@ -1,0 +1,7 @@
+@charset "utf-8";
+/**
+ * CSS Document 
+ * Created by cai on 2014/12/26.
+ */
+*{ margin: 0px; padding: 0px;}
+.box{ width: 500px; margin: 0 auto; border: 1px solid #cccccc; border-radius: 5px; box-shadow: 0 0 10px #ccc; padding: 0px 20px 40px; margin-top: 150px;}

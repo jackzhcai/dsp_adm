@@ -1,0 +1,55 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">Offer Peer 分组</h3>
+    <a class="btn btn-primary" href="/adpeer/adpeeredit">Create Offer Peer</a>
+    <div class="table-responsive">
+        <table class="table table-striped" id="J_tableAdPeer">
+            <thead>
+            <tr>
+                <th class="col-sm-2">&nbsp;</th>
+                <th class="col-sm-1">appid</th>
+                <th class="col-sm-2">appname</th>
+                <th class="col-sm-2">adx_name</th>
+                <!--<th>category</th>-->
+                <!--<th>category</th>-->
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        //
+        window.MyObj.ListPage.init({
+            "tableId": "#J_tableAdPeer",
+            "delBtns": ".J_dataTablesDetele", //
+            "dataTabOps":{
+                "paging":   true, //分页
+                "ordering": true, //排序
+                "info":     false, //信息（左下）
+                "lengthChange": false, //每页条数
+                "searching": false, //搜索
+                //"serverSide": false,
+                "ajax": "/data/getAdpeerDataList",
+                //"data": window.globalAdPeerDatas,
+                "columns": [
+                    {
+                        "data": "id",
+                        "orderable": false,
+                        "render": function(data, type, full, meta){
+                            var option = [
+                                        '<a role="button" href="/adpeer/adpeeredit?id='+data+'" class="btn btn-default btn-xs">Edit</a>',
+                                        '<a role="button" data-confirm-text="Delete it!" href="/data/deleteAdpeerData?id='+data+'" class="btn btn-default btn-xs J_dataTablesDetele">Delete</a>'
+                            ];
+                            return option.join('&nbsp;');
+                        }
+                    },
+                    { "data": "appid" },
+                    { "data": "appname" },
+                    { "data": "adx_name" }//,
+                    //{ "data": "category" }
+                ],
+                "order": [[1, 'asc']]
+            }
+        });
+    });
+</script>

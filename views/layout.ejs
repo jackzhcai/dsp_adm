@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Advertisement List</title>
+    <link type="text/css" rel="shortcut icon" href="/images/favicon.ico" />
+    <link type="text/css" href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" href="/stylesheets/jquery.dataTables.min.css" rel="stylesheet">
+    <link type="text/css" href="/stylesheets/style.css" rel="stylesheet">
+    <script type="text/javascript">
+        window.dsp_adma = {
+            "adx_name": <%if(locals.adx_name){%>"<%=locals.adx_name%>"<%}else{%><%=null%><%}%>
+        }
+    </script>
+    <script type="text/javascript" src="/javascripts/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/javascripts/initSession.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <!--<script type="text/javascript" src="/stylesheets/holder.js"></script>-->
+    <script type="text/javascript" src="/javascripts/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/javascripts/sys.js"></script>
+</head>
+<body>
+<% include ./partials/header %>
+<div class="container-fluid">
+    <div class="row">
+        <div id="mainMenu" class="col-sm-2 sidebar">
+            <div style="padding: 20px 20px 30px;">
+                <select id="changeAdx" class="form-control" data-session-value="<%if(locals.adx_name){%><%=locals.adx_name%><%}%>"></select>
+            </div>
+            <ul id="J_sidebarMenu" class="sidebar-menu on-click nav nav-sidebar" data-module="<%if(moduletitle){%><%=moduletitle%><%}%>">
+                <li data-module="app">
+                    <div class="sidebar-menu-item-wrapper"> <a data-target-page="page-dashboard" href="/app"> <i class="glyphicon glyphicon-phone"></i> <span>媒体APP</span> </a> </div>
+                </li>
+
+                <li data-module="appgroup">
+                    <div class="sidebar-menu-item-wrapper"> <a data-target-page="page-dashboard" href="/appgroup"> <i class="glyphicon glyphicon-globe"></i> <span>媒体APP群组管理</span> </a> </div>
+                </li>
+
+                <li data-module="addeliver">
+                    <div class="sidebar-menu-item-wrapper"> <a data-target-page="page-dashboard" href="/addeliver"> <i class="glyphicon glyphicon-cog"></i> <span>Ad投放策略配置</span> </a> </div>
+                </li>
+
+                <li data-module="adpeer">
+                    <div class="sidebar-menu-item-wrapper"> <a data-target-page="page-dashboard" href="/adpeer"> <i class="glyphicon glyphicon-list-alt"></i> <span>Offer分组</span> </a> </div>
+                </li>
+
+                <li data-module="report">
+                    <div class="sidebar-menu-item-wrapper"> <a data-target-page="page-dashboard" href="/report"> <i class="glyphicon glyphicon-picture"></i> <span>报表数据</span> </a> </div>
+                </li>
+            </ul>
+        </div>
+        <%- body %>
+    </div>
+</div>
+<script type="text/javascript">
+;(function($, window){
+    /**
+     * 切换adx_name session
+     * @param options
+     * @constructor
+     */
+    function SetAdx(options){
+        this.adxListUrl = options.adxListUrl;
+        this.setAdxSessionUrl = options.setAdxSessionUrl;
+        this.changeAdx = $(options.changeAdxId);
+        this.init();
+    }
+    SetAdx.prototype = {
+        constructor: SetAdx,
+        init:function(){
+            this.initAdxSelect();
+            this.changeAdx.on("change", this.getAdxList.bind(this));
+        },
+        initAdxSelect:function(){
+            var sesVal = this.changeAdx.attr("data-session-value") || null;
+            this.sendAjax({
+                "url": this.adxListUrl,
+                "dataType": "json",
+                "suc":function(data, textStatus, jqXHR){
+                    for(var i= 0, len=data.length; i<len; i++){
+                        var adxName = data[i]['adx_name'];
+                        if(sesVal == adxName){
+                            this.changeAdx[0].add(new Option(adxName,adxName, false, true));
+                        }else{
+                            this.changeAdx[0].add(new Option(adxName,adxName, false, false));
+                        }
+                    }
+                }.bind(this)
+            });
+        },
+        genOption:function(text, value, defaultSelected, selected){
+            //return new Option(text, value, defaultSelected, selected);
+        },
+        getAdxList: function(event){
+            var tar = $(event.target);
+            if(window.sessionStorage && window.sessionStorage.getItem("appListDatas")){
+                window.sessionStorage.removeItem("appListDatas");
+            }
+            this.sendAjax({
+                "url": this.setAdxSessionUrl,
+                "type": "GET",
+                "dataType": "text",
+                "data": "adx_name=" + tar.val(),
+                "suc":function(data, textStatus, jqXHR){
+                    if(+data){
+                        window.location.reload();
+                    }
+                }.bind(this)
+            });
+        },
+        sendAjax:function(option){
+            option.url && $.ajax({
+                "url": option.url,
+                "type": option.method || "GET",
+                "dataType": option.dataType || "text",
+                "data": option.data || null,
+                "success": option.suc || function(data, textStatus, jqXHR){
+                    console.log("success");
+                },
+                "error": option.err || function(data, textStatus, jqXHR){
+                    console.log("error");
+                }
+            });
+        }
+    }
+
+    $(function(){
+        var panel =  $("#J_sidebarMenu");
+        var mark = panel.attr("data-module") || '';
+        !!mark && panel.find("li[data-module="+mark+"]").addClass("active");
+        //
+        new SetAdx({
+            "adxListUrl": "/data/getAdxList",
+            "setAdxSessionUrl": "/data/setAdxSession",
+            "changeAdxId": "#changeAdx"
+        })
+    });
+})(jQuery, window);
+</script>
+</body>
+</html>

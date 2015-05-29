@@ -1,0 +1,79 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">媒体APP群组</h3>
+    <a class="btn btn-primary" href="/appgroup/appgroupedit">Create APP Group</a>
+    <div class="table-responsive">
+        <table class="table table-striped" id="J_tableadAppgroupList">
+            <thead>
+            <tr>
+                <th class="col-sm-2">&nbsp;</th>
+                <th>app_gruop_name</th>
+                <th class="col-sm-3">app_list</th>
+                <th>description</th>
+                <th>adx_name</th>
+                <th>user_name</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+;(function($, window){
+    //appgroup page
+    window.appgroup = {
+        init: function(){
+            var _this = this;
+            //序列化列表
+            this.initPageList();
+        },
+        initPageList:function(){
+            window.MyObj.ListPage.init({
+                "tableId": "#J_tableadAppgroupList",
+                "delBtns": ".J_dataTablesDetele", //
+                "dataTabOps":{
+                    "paging":   true, //分页
+                    "ordering": true, //排序
+                    "info":     false, //信息（左下）
+                    "lengthChange": false, //每页条数
+                    "searching": false, //搜索
+                    //"serverSide": false,
+                    "ajax": "/data/getAppgroupDataList",
+                    //"data": window.globalAppGroupDatas,
+                    "columns": [
+                        {
+                            "data": "id",
+                            "orderable": false,
+                            "render": function(data, type, full, meta){
+                                var option = [
+                                            '<a role="button" href="/appgroup/appgroupedit?id='+data+'" class="btn btn-default btn-xs">Edit</a>',
+                                            '<a role="button" data-confirm-text="Delete it!" href="/data/deleteAppgroupData?id='+data+'" class="btn btn-default btn-xs J_dataTablesDetele">Delete</a>'
+                                ];
+                                return option.join('&nbsp;');
+                            }
+                        },
+                        { "data": "app_group_name" },
+                        {
+                            "data": "app_list",
+                            "render": function(data, type, full, meta){
+                                var tpml = [], i, len, data=$.parseJSON(data.replace(/'/g, '"'));
+                                for(i= 0, len=data.length; i<len; i++){
+                                    tpml.push(data[i]['appname']);
+                                }
+                                return tpml.join(',');
+                            }
+                        },
+                        { "data": "description" },
+                        { "data": "adx_name" },
+                        { "data": "user_name" }
+                    ],
+                    "order": [[1, 'asc']]
+                }
+            });
+        }
+    }
+    //
+    $(function() {
+        //initialize appgroup page
+        window.appgroup.init();
+    });
+})(jQuery, window);
+</script>

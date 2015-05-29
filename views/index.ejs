@@ -1,0 +1,63 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">媒体APP</h3>
+    <a class="btn btn-primary" href="/app/appedit">Create App</a>
+    <div class="table-responsive">
+        <table class="table table-striped" id="J_tableAppList">
+            <thead>
+            <tr>
+                <th class="col-sm-2">OP</th>
+                <th class="col-sm-1">id</th>
+                <th class="col-sm-2">App id</th>
+                <th class="col-sm-2">App name</th>
+                <th class="col-sm-2">country</th>
+                <th class="col-sm-2">category</th>
+                <th class="col-sm-1">size</th>
+                <th class="col-sm-1">traffic</th>
+                <th class="col-sm-1">footprice</th>
+                <th>avgprice</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        window.MyObj.ListPage.init({
+            "tableId": "#J_tableAppList",
+            "delBtns": ".J_dataTablesDetele", //
+            "dataTabOps":{
+                "paging":   true, //分页
+                "ordering": true, //排序
+                "info":     false, //信息（左下）
+                "lengthChange": false, //每页条数
+                "searching": false, //搜索
+                //"serverSide": false,
+                "ajax": "/data/getAppsDataList",
+                //"data": window.globalAppDatas,
+                "columns": [
+                    {
+                        "data": "id",
+                        "orderable": false,
+                        "render": function(data, type, full, meta){
+                            var option = [
+                                        '<a role="button" href="./app/appedit?id='+data+'" class="btn btn-default btn-xs">Edit</a>',
+                                        '<a role="button" data-confirm-text="Delete it!" href="./app/delete?id='+data+'" class="btn btn-default btn-xs J_dataTablesDetele">Delete</a>'
+                            ];
+                            return option.join('');
+                        }
+                    },
+                    { "data": "id" },
+                    { "data": "appid" },
+                    { "data": "appname" },
+                    { "data": "country" },
+                    { "data": "category" },
+                    { "data": "size" },
+                    { "data": "traffic" },
+                    { "data": "footprice" },
+                    { "data": "avgprice" }
+                ],
+                "order": [[1, 'asc']]
+            }
+        });
+    });
+</script>

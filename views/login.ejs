@@ -1,0 +1,44 @@
+<div class="box">
+    <h3 class="page-header">Register</h3>
+    <div id="table-responsive-upload">
+        <form enctype="multipart/form-data" method="POST" action="/data/dologin" role="form" class="form-horizontal" id="J_loginForm">
+            <% if(message){ %>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <div style="color: red;"><%= message%></div>
+                </div>
+            </div>
+            <%}%>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="username">username</label>
+                <div class="col-sm-7">
+                    <input type="text" placeholder="username" name="username" class="validate[required, minSize[2]] form-control" id="username">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="password">password</label>
+                <div class="col-sm-7">
+                    <input type="password" placeholder="password" name="password" class="validate[required, minSize[2]] form-control" id="password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="repassword">repassword</label>
+                <div class="col-sm-7">
+                    <input type="password" placeholder="confirm password" name="repassword" class="validate[required, minSize[2], equals[password]] form-control" id="repassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button id="J_submitBtn" class="btn btn-default btn-primary" type="submit">Submit</button>
+                    <!--&nbsp;&nbsp;<button class="btn btn-default btn-primary" type="reset">Reset</button>-->
+                    &nbsp;&nbsp;<a href="/signin">Signin</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $("#J_loginForm").validationEngine();
+    });
+</script>

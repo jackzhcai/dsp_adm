@@ -1,0 +1,257 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">媒体APP Group Edit</h3>
+    <div id="table-responsive-upload">
+        <form enctype="multipart/form-data" method="POST" action="/data/updateAppgroupData" role="form" class="form-horizontal" id="J_groupForm">
+            <input type="hidden" name="id">
+            <input type="hidden" name="adx_name" value="<%if(locals.adx_name){%><%=locals.adx_name%><%}%>">
+            <input type="hidden" name="mgr_user_id" value="<%if(locals.userid){%><%=locals.userid%><%}%>">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="app_group_name">app_group_name</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="name" name="app_group_name" id="app_group_name" class="validate[required] form-control">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="J_selectapp">app_list</label>
+                <div class="col-sm-3">
+                    <input id="J_selectapp" data-toggle="modal" data-target="#J_selectappmodaldialog" class="validate[required] country-btn btn btn-default" type="text" readonly="readonly" placeholder="select app ..." value="" style="width:100%;">
+                    <input id="J_selectappvalue" name="app_list" type="hidden" class="form-control" value="">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="app_list">app_list</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="app_list" name="app_list" class="validate[required] form-control" id="app_list">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="description">description</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control" rows="3" name="description" placeholder="description"  id="description"></textarea>
+                    <!--<input type="text" placeholder="description" name="description" class="form-control" id="description">-->
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="adx_name">adx_name</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="adx_name" name="adx_name" class="validate[required] form-control" id="adx_name">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="mgr_user_id">mgr_user_id</label>
+                <div class="col-sm-3">
+                    <input type="text" placeholder="mgr_user_id" name="mgr_user_id" class="validate[required, min[1], custom[number]] form-control" id="mgr_user_id">
+                    <div class="form-control-required text-danger">*</div>
+                </div>
+            </div>
+            -->
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button id="J_submitBtn" class="btn btn-default btn-primary" type="submit" data-submit-target-url="" data-submit-redirect="/appgroup">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="J_selectappmodaldialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Select App</h4>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; padding:5px;">
+                <table class="table table-striped" id="J_tableAppList" style="width:100%;">
+                    <tr style=" background-color: #FFF;"><td style="text-align: center; border: 0px;">loading ...</td></tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="J_confirmbtn" class="btn btn-default" data-initialize="F">Confirm</button>
+                <button type="button" id="J_cancelbtn" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<link type="text/css" rel="stylesheet" href="/stylesheets/validationEngine.jquery.css" />
+<style type="text/css">
+    #J_selectappmodaldialog table#J_tableAppList tbody tr td:last-child{ padding-top:4px; padding-bottom: 0px;}
+    #J_selectappmodaldialog table.dataTable tfoot th{ padding-left: 2px;}
+</style>
+<script type="text/javascript" src="/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="/javascripts/plugin.js"></script>
+<script type="text/javascript">
+;(function($, window) {
+    //appgroupedit page
+    window.appgroupedit = {
+        initAppData: [],
+        init: function () {
+            var _this = this;
+            //validator form
+            $("#J_groupForm").validationEngine();
+            //submit form and init form
+            this.initPage();
+            //select app list
+            _this.initSelectOps.call(_this);
+        },
+        initPage:function(){
+            window.MyObj.FormPage.init({
+                "submitBtnId": "#J_submitBtn" || null,
+                "uuid": "id",
+                "getCurDataUrl": "/data/getAppgroupData",
+                "initCallback": function(){
+                    var vals = $("#J_selectappvalue").val() || '',
+                        names=[];
+                    vals && (vals = $.parseJSON(vals.replace(/'/g, '"')));
+                    vals.length && ($.each(vals, function (idx, item) {
+                        names.push(item['appname']);
+                    }));
+                    $("#J_selectapp").val(names.join(","));
+                }
+            });
+        },
+        initSelectOps: function () {
+            $("#J_selectapp").selectMulOpt({
+                "selectItem": $("#J_selectapp"), //选择按钮
+                "saveAppValIpt": $("#J_selectappvalue"), //存值隐藏域
+                "appListTableElm": $("#J_tableAppList"),
+                "confirmBtn": $('#J_confirmbtn'),
+                "cancelBtn": $('#J_cancelbtn'),
+                "modaldialog": $("#J_selectappmodaldialog"),
+                "getAppDataUrl": "/data/getAppDataListDetail",
+                "appListTable": null,
+                "getAppDataRequest": null,
+                "appListDatas": [],
+                "bindEvent": function () {
+                    var _this = this;
+                    this.selectItem.on("click", function (event) {
+                        var vals = $("#J_selectappvalue").val() || '',
+                                initAppData = window.appgroupedit.initAppData;
+                        vals && (vals = $.parseJSON(vals.replace(/'/g, '"')));
+                        vals.length && (
+                                initAppData.length=0,
+                        $.each(vals, function(idx, item){
+                            initAppData.push(item['id']);
+                        }));
+                        //initAppData
+                        if(!_this.appListTable){
+                            //渲染表格
+                            _this.renderTable.call(_this, event);
+                        }
+                    });
+                },
+                "tableOption": {
+                    "paging": true, //分页
+                    "ordering": true, //排序
+                    "info": false, //信息（左下）
+                    "lengthChange": false, //每页条数
+                    "searching": true, //搜索
+                    //"serverSide": false,
+                    //"ajax": "/data/getAppDataList",
+                    //"data": gdata,
+                    "scrollX": true,
+                    "columns": [
+                        { "data": "id" },
+                        { "data": "adx_name" },
+                        { "data": "appid" },
+                        { "data": "appname" },
+                        { "data": "country" },
+                        { "data": "size" },
+                        { "data": "os" },
+                        { "data": "category" }
+                    ],
+                    "order": [
+                        [0, 'asc']
+                    ],
+                    "drawCallback": function (settings) {
+                        var confirmBtn = $("#J_confirmbtn");
+                        setTimeout(function () {
+                            confirmBtn.attr("data-initialize", "T").removeClass("btn-default").addClass("btn-primary");
+                        }, 0);
+                    },
+                    "rowCallback": function (row, data) {
+                        var initAppData = window.appgroupedit.initAppData;
+                        if (initAppData.length && ( $.inArray(data['id'], initAppData) > -1)) {
+                            $(row).addClass("selected");
+                        }
+                    }
+                },
+                "tableTpml": '<thead><tr>' +
+                        '<th>id</th>' +
+                        '<th>adx_name</th>' +
+                        '<th>appid</th>' +
+                        '<th>appname</th>' +
+                        '<th>country</th>' +
+                        '<th>size</th>' +
+                        '<th>os</th>' +
+                        '<th>category</th>' +
+                        '</tr></thead>' +
+                        '<tfoot><tr>' +
+                        '<th></th>' +
+                        '<th></th>' +
+                        '<th><input type="text" placeholder="Appid" style="width: 60px;" /></th>' +
+                        '<th><input type="text" placeholder="Appname" style="width: 100px;" /></th>' +
+                        '<th><input type="text" placeholder="Country" style="width: 65px;" /></th>' +
+                        '<th><input type="text" placeholder="Size" style="width: 60px;" /></th>' +
+                        '<th><input type="text" placeholder="Os" style="width: 70px;" /></th>' +
+                        '<th><input type="text" placeholder="Category" style="width: 70px;" /></th>' +
+                        '</tr></tfoot>',
+                "renderTable": function (event) {
+                    var _this = this;
+                    setTimeout(function () {
+                        //初始化表格
+                        _this.appListTableElm.html(_this.tableTpml);
+                        //加入数据
+                        if (_this.appListDatas.data && _this.appListDatas.data.length) {
+                            _this.tableOption["data"] = _this.appListDatas.data;
+                        } else {
+                            _this.stopAjax();
+                            _this.tableOption["ajax"] = _this.getAppDataUrl;
+                        }
+                        //渲染表格
+                        _this.appListTable = _this.appListTableElm.DataTable(_this.tableOption);
+                        //手动点击选中
+                        _this.appListTable && _this.appListTable.columns().eq(0).each(function (colIdx) {
+                            $('input', _this.appListTable.column(colIdx).footer()).on('keyup change', function () {
+                                _this.appListTable.column(colIdx).search(this.value).draw();
+                            });
+                        });
+                    }, 1000);
+                },
+                "confirmCallback": function (event) {
+                    var elem = $(event.target), datas = null, len, i, keys = [], values = [], obj;
+                    if (elem.attr("data-initialize") === "F") {
+                        return;
+                    }
+                    if (this.appListTable) {
+                        datas = this.appListTable.rows('.selected').data();
+                        for (i = 0,len = datas.length; i < len; i++) {
+                            obj = {};
+                            obj['id'] = datas[i]['id'];
+                            obj['appid'] = datas[i]['appid'];
+                            obj['appname'] = datas[i]['appname'];
+                            keys.push(datas[i]['appname'])
+                            obj && values.push(JSON.stringify(obj).replace(/"/g, "'"));
+                        }
+                        this.selectItem.val(keys.join(","));
+                        this.saveAppValIpt.val('[' + values.join(",") + ']');
+                        //
+                        this.hideModaldialog();
+                    }
+                }
+            });
+        }
+    };
+    $(function () {
+        //initialize appgroupedit page
+        window.appgroupedit.init();
+    });
+    })(jQuery, window);
+</script>
